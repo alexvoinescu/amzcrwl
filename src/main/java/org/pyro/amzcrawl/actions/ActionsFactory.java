@@ -10,13 +10,13 @@ public class ActionsFactory {
         WebActionable actionable;
         switch(action.getType()) {
             case KW_SEARCH:
-                actionable = new KeywordSearch();
+                actionable = new KeywordSearch(action);
                 break;
             case PRODUCT_PAGE:
-                actionable = new ProductPageAction();
+                actionable = new ProductPageAction(action);
                 break;
             default:
-                actionable = new KeywordSearch();
+                actionable = new KeywordSearch(action);
                 break;
         }
         return actionable;

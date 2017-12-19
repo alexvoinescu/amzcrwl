@@ -24,7 +24,6 @@ public class Action {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private ActionType type;
 
@@ -71,7 +70,7 @@ public class Action {
     }
 
     public String getAttributes() {
-        return attributes;
+        return this.attributes;
     }
 
     public void setAttributes(String attributes) {

@@ -3,6 +3,7 @@ package org.pyro.amzcrawl.controller;
 import org.pyro.amzcrawl.actions.ActionsFactory;
 import org.pyro.amzcrawl.actions.WebActionable;
 import org.pyro.amzcrawl.model.Action;
+import org.pyro.amzcrawl.model.Keyword;
 import org.pyro.amzcrawl.repository.ActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,11 @@ public class ActionController {
     @GetMapping("/actions")
     public List<Action> getAllKeywords() {
         return actionRepository.findAll();
+    }
+
+    @PostMapping("/actions")
+    public Action createAction(@Valid @RequestBody Action action) {
+        return actionRepository.save(action);
     }
 
     @GetMapping("/actions/{id}")
@@ -53,7 +59,7 @@ public class ActionController {
         Action action = actionRepository.findOne(id);
 
         WebActionable actionable = ActionsFactory.getActionType(action);
-        actionable.run();
+        actionable.run(action);
 
         return ResponseEntity.ok(action);
     }
