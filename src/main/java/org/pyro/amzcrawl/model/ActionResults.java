@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by alex on 19.12.2017.
  */
 @Entity
-@Table(name = "actionsResults")
+@Table(name = "actions_results")
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 public class ActionResults {
@@ -26,15 +26,23 @@ public class ActionResults {
 
     private String response;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "action_id")
     private Action action;
 
-    @ManyToOne
-    @JoinColumn(name = "action_id")
     public Action getAction() {
-        return action;
+        return this.action;
     }
 
     public void setAction(Action action) {
         this.action = action;
+    }
+
+    public String getResponse() {
+        return this.response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 }

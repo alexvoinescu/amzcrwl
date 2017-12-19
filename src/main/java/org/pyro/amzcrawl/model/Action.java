@@ -43,11 +43,11 @@ public class Action {
     @LastModifiedDate
     private Date updatedAt;
 
+    @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ActionResults> actionResults;
 
-    @OneToMany(mappedBy = "actionResult", cascade = CascadeType.ALL)
     public Set<ActionResults> getActionResults() {
-        return actionResults;
+        return this.actionResults;
     }
 
     public void setActionResults(Set<ActionResults> actionResults) {
