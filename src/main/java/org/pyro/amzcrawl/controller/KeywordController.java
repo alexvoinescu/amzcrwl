@@ -1,6 +1,7 @@
 package org.pyro.amzcrawl.controller;
 
 import org.pyro.amzcrawl.model.Keyword;
+import org.pyro.amzcrawl.services.KeywordExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import org.pyro.amzcrawl.repository.KeywordRepository;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
