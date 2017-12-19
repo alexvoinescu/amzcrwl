@@ -46,7 +46,6 @@ public class SearchController {
 
                 url = "https://www.amazon.com" + nextPage;
                 ref = url;
-                System.out.println(results);
             }
         } catch (IOException e) {
             e.printStackTrace();
