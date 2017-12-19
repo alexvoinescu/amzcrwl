@@ -20,7 +20,8 @@ public class KeywordExtractor {
         String[] words = this.text.split(" ");
         List<String> validWords = new ArrayList<String>();
         for(int i = 0; i<words.length; i++) {
-            if(words[i].length() < 3) {
+            if(words[i].length() > 3) {
+                words[i]=words[i].replaceAll("[^A-Za-z0-9]", "");
                 validWords.add(words[i]);
             }
         }
@@ -45,8 +46,12 @@ public class KeywordExtractor {
                 fourWords = threeWords + " " + validWords.get(i + 3);
             }
 
-            System.out.println(fourWords);
+        }
 
+        for(Map.Entry<String, Integer> e : this.uniqueWords.entrySet()) {
+            if(e.getValue() > 10) {
+                System.out.println(e.getKey() + ", " + e.getValue() + ";");
+            }
         }
 
     }

@@ -18,6 +18,12 @@ public class KeywordController {
     @Autowired
     KeywordRepository keywordRepository;
 
+    @PostMapping("/extract/keywords")
+    public void extractKeywords(@Valid @RequestBody Map<String, String> attr) {
+        KeywordExtractor kw = new KeywordExtractor(attr.get("text"));
+        kw.getKeywords();
+    }
+
     @GetMapping("/keywords")
     public List<Keyword> getAllKeywords() {
         return keywordRepository.findAll();
