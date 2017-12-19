@@ -5,14 +5,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.pyro.amzcrawl.model.Action;
-import org.pyro.amzcrawl.model.ActionResults;
+import org.pyro.amzcrawl.model.Keyword;
 import org.pyro.amzcrawl.responses.WebResponsable;
+import org.pyro.amzcrawl.results.KeywordSearchResultRow;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by alex on 19.12.2017.
@@ -30,44 +28,42 @@ public class KeywordSearch extends AbstractAction implements WebActionable {
 
         String urlToParse = this.url;
         String refToParse = this.ref;
-        String results = "";
         Document document;
+        List<KeywordSearchResultRow> allResults = new ArrayList<>();
         try {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 1; i++) {
                 Connection connection = this.createConnection(urlToParse, refToParse);
-
                 document = connection.get();
-                System.out.println("Page " + i + " -> " + urlToParse);
-                results += "Page " + i + "/ url: "+urlToParse+"; " + System.lineSeparator();
-                results += this.getSearchResults(document);
+                List<KeywordSearchResultRow> titles = this.getSearchResults(document);
+                allResults.addAll(titles);
                 String nextPage = document.select("a#pagnNextLink").first().attr("href");
-
                 urlToParse = "https://www.amazon.com" + nextPage;
                 refToParse = urlToParse;
-                //results += "----------------------------------\r\n";
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ActionResults actionResults = new ActionResults();
-        actionResults.setResponse(results);
-        this.action.getActionResults().add(actionResults);
 
-        System.out.println(actionResults.getResponse());
+        for(KeywordSearchResultRow row : allResults) {
+            System.out.println(row);
+        }
 
         return this;
     }
 
-    private String getSearchResults(Document doc) {
-        String results = "";
-        //s-access-title
+    private List<KeywordSearchResultRow> getSearchResults(Document doc) {
+        List<KeywordSearchResultRow> results = new ArrayList<>();
         Elements titles = doc.select("h2.s-access-title");
-
-        for (Element title : titles) {
-            results += title.html() + "; " + System.lineSeparator();
+        for (Element title:titles) {
+            Element sponsored = title.getElementsContainingText("Sponsored").first();
+            boolean isSponsored = false;
+            if(sponsored != null) {
+                title.select("span").remove();
+                isSponsored = true;
+            }
+            KeywordSearchResultRow result = new KeywordSearchResultRow(doc.baseUri(), title.html(), isSponsored);
+            results.add(result);
         }
-
         return results;
     }
 
