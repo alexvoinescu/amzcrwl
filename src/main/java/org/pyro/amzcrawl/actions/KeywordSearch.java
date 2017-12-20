@@ -29,9 +29,10 @@ public class KeywordSearch extends AbstractAction implements WebActionable {
         String urlToParse = this.url;
         String refToParse = this.ref;
         Document document;
+
         List<KeywordSearchResultRow> allResults = new ArrayList<>();
         try {
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 10; i++) {
                 Connection connection = this.createConnection(urlToParse, refToParse);
                 document = connection.get();
                 List<KeywordSearchResultRow> titles = this.getSearchResults(document);
@@ -44,24 +45,21 @@ public class KeywordSearch extends AbstractAction implements WebActionable {
             e.printStackTrace();
         }
 
+        String results = "Title, Sponsored, Price (min), No reviews, Stars;" + System.lineSeparator();
         for(KeywordSearchResultRow row : allResults) {
-            System.out.println(row);
+            results += row.toString() + ";" + System.lineSeparator();
         }
+
+        System.out.println(results);
 
         return this;
     }
 
     private List<KeywordSearchResultRow> getSearchResults(Document doc) {
         List<KeywordSearchResultRow> results = new ArrayList<>();
-        Elements titles = doc.select("h2.s-access-title");
-        for (Element title:titles) {
-            Element sponsored = title.getElementsContainingText("Sponsored").first();
-            boolean isSponsored = false;
-            if(sponsored != null) {
-                title.select("span").remove();
-                isSponsored = true;
-            }
-            KeywordSearchResultRow result = new KeywordSearchResultRow(doc.baseUri(), title.html(), isSponsored);
+        Elements products = doc.select("div.s-item-container");
+        for (Element product:products) {
+            KeywordSearchResultRow result = new KeywordSearchResultRow(product);
             results.add(result);
         }
         return results;
